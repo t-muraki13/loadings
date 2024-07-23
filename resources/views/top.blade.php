@@ -3,7 +3,7 @@
   <div class="mt-4 flex justify-center">
     
     <div class="w-6/7">
-      <table class="min-w-full bg-white">
+      <table class="min-w-full bg-white mb-4">
         <thead>
           <tr>
             <th class="px-4 py-2 w-1/12 font-semibold text-base text-gray-700 bg-gray-100 border border-gray-700"></th>
@@ -62,6 +62,7 @@
           @endforeach
         </tbody>
       </table>
+      {{ $loading->links() }}
       <div class="flex justify-end mt-4 mb-4">
         <button type="button" onclick="location.href='{{ route('create') }}'" class="inline-flex text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg">登録</button>
       </div>

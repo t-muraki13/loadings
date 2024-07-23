@@ -14,8 +14,8 @@ class LoadingController extends Controller
     public function index()
     {
         $loading = Loading::select('id', 'receiving', 'name', 'number', 'charge', 'issue', 'remarks', 'place')
-        ->get();
-        
+        ->paginate(10);
+
         return view('top', compact('loading'));
     }
 
