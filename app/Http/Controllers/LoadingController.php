@@ -8,14 +8,40 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Throwable;
+use Carbon\Carbon;
 
 class LoadingController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $loading = Loading::select('id', 'receiving', 'name', 'number', 'charge', 'issue', 'remarks', 'place')
-        ->paginate(10);
+        $pagination = $request->pagination ?? 5;
+        // 日付パラメータの取得と検証
+        $date = $request->input('date');
+        $parseDate = null;
+    
+        // 日付が存在する場合、Carbonでパース
+        if ($date) {
+            try {
+                $parseDate = Carbon::parse($date)->format('Y-m-d'); // データベースの日付形式に合わせる
+            } catch (\Exception $e) {
+                // 日付が無効な場合のエラーハンドリング
+                $parseDate = null;
+            }
+        }
 
+        $query = Loading::select('id', 'receiving', 'name', 'number', 'charge', 'issue', 'remarks', 'place')
+            ->when($parseDate, function ($query, $parseDate) {
+            $query->whereDate('receiving', $parseDate)
+                  ->orWhereDate('issue', $parseDate)
+                  ->orderByRaw("CASE WHEN DATE(receiving) = ? THEN 1 ELSE 2 END", [$parseDate])
+                  ->orderBy('receiving', 'asc')
+                  ->orderBy('issue', 'asc');
+        })
+        ->sortOrder($request->sort);
+    
+        // ページネーション
+        $loading = $query->paginate($pagination);
+    
         return view('top', compact('loading'));
     }
 

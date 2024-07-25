@@ -1,7 +1,80 @@
 <x-app-layout>
 <x-flash-message status="session('status')" />
+
+  <form action="{{ route('index') }}" method="get">
+    <div class="lg:flex lg:justify-end items-center max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+      <div>
+        <span class="text-sm">日付絞りこみ</span>
+        <div class="lg:flex items-center space-x-2">
+          <input type="date" name="date" id="date" value="{{ request('date') }}">
+          <div class="flex space-x-4 items-center">
+            <div class="items-center">
+              <button type="submit" class="text-white bg-blue-500 border-0 py-2 px-8 focus:outline-none hover:bg-blue-600 rounded text-lg">検索</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="lg:flex ml-8">
+        <div>
+          <span class="text-sm">表示順</span>
+          <br>
+          <select name="sort" id="sort"  class="mr-4">
+            <option value="">
+                  
+            </option>
+            <option value="{{ \App\Constants\Common::SORT_ORDER['receiving'] }}" 
+              @if(\Request::get('sort') === \App\Constants\Common::SORT_ORDER['receiving'])
+                  selected
+                  @endif>
+                  入庫日順
+            </option>
+            <option value="{{ \App\Constants\Common::SORT_ORDER['name'] }}" 
+              @if(\Request::get('sort') === \App\Constants\Common::SORT_ORDER['name'])
+                  selected
+                  @endif>
+                  名前順
+            </option>
+            <option value="{{ \App\Constants\Common::SORT_ORDER['charge'] }}" 
+              @if(\Request::get('sort') === \App\Constants\Common::SORT_ORDER['charge'])
+                  selected
+                  @endif>
+                  担当者順
+            </option>
+            <option value="{{ \App\Constants\Common::SORT_ORDER['issue'] }}" 
+              @if(\Request::get('sort') === \App\Constants\Common::SORT_ORDER['issue'])
+                  selected
+                  @endif>
+                  出庫日順
+            </option>
+            <option value="{{ \App\Constants\Common::SORT_ORDER['place'] }}" 
+              @if(\Request::get('sort') === \App\Constants\Common::SORT_ORDER['place'])
+                  selected
+                  @endif>
+                  入庫場所順
+            </option>
+          </select>
+        </div>
+        <div class="ml-4">
+          <span class="text-sm">表示件数</span>
+          <br>
+          <select name="pagination" id="pagination">
+            <option value="5" @if(\Request::get('pagination') === '5') selected @endif>
+              5件
+            </option>
+            <option value="10" @if(\Request::get('pagination') === '10') selected @endif>
+              10件
+            </option>
+            <option value="20" @if(\Request::get('pagination') === '20') selected @endif>
+              20件
+            </option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </form>
+  
+  
   <div class="mt-4 flex justify-center">
-    
     <div class="w-6/7">
       <table class="min-w-full bg-white mb-4">
         <thead>
@@ -62,37 +135,51 @@
           @endforeach
         </tbody>
       </table>
-      {{ $loading->links() }}
+      {{ $loading->appends([
+        'sort' => \Request::get('sort'),
+        'pagination' => \Request::get('pagination')
+      ])->links() }}
       <div class="flex justify-end mt-4 mb-4">
         <button type="button" onclick="location.href='{{ route('create') }}'" class="inline-flex text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg">登録</button>
       </div>
     </div>
   </div>
   <script>
-  function toggleComplete(id) {
-      const rows = document.getElementsByName('row-' + id);
-      const button = document.getElementById('toggle-button-' + id);
+    function toggleComplete(id) {
+        const rows = document.getElementsByName('row-' + id);
+        const button = document.getElementById('toggle-button-' + id);
+      
+        for (let i = 0; i < rows.length; i++) {
+            if (button.innerText === '完了') {
+                rows[i].classList.add('bg-gray-400'); // グレーに変更
+            } else {
+                rows[i].classList.remove('bg-gray-400'); // 背景色をリセット
+            }
+        }
+      
+        if (button.innerText === '完了') {
+            // 行をグレーアウトする
+            button.innerText = '戻す'; // ボタンのテキストを「戻す」に変更
+            button.classList.remove('bg-red-500'); // 背景色を変更
+            button.classList.add('bg-gray-500'); // グレーに変更
+        } else {
+            // 行の背景色を元に戻す
+            button.innerText = '完了'; // ボタンのテキストを「完了」に変更
+            button.classList.remove('bg-gray-500'); // 背景色を変更
+            button.classList.add('bg-red-500'); // 元の色に戻す
+        }
+    }
+  
+    const select = document.getElementById('sort');
+    select.addEventListener('change', function() {
+      this.form.submit();
+    });
+
+    const pagination = document.getElementById('pagination');
+    pagination.addEventListener('change', function() {
+      this.form.submit();
+    });
     
-      for (let i = 0; i < rows.length; i++) {
-          if (button.innerText === '完了') {
-              rows[i].classList.add('bg-gray-400'); // グレーに変更
-          } else {
-              rows[i].classList.remove('bg-gray-400'); // 背景色をリセット
-          }
-      }
-    
-      if (button.innerText === '完了') {
-          // 行をグレーアウトする
-          button.innerText = '戻す'; // ボタンのテキストを「戻す」に変更
-          button.classList.remove('bg-red-500'); // 背景色を変更
-          button.classList.add('bg-gray-500'); // グレーに変更
-      } else {
-          // 行の背景色を元に戻す
-          button.innerText = '完了'; // ボタンのテキストを「完了」に変更
-          button.classList.remove('bg-gray-500'); // 背景色を変更
-          button.classList.add('bg-red-500'); // 元の色に戻す
-      }
-  }
   </script>
     
 </x-app-layout>
