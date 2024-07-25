@@ -19,9 +19,6 @@
           <span class="text-sm">表示順</span>
           <br>
           <select name="sort" id="sort"  class="mr-4">
-            <option value="">
-                  
-            </option>
             <option value="{{ \App\Constants\Common::SORT_ORDER['receiving'] }}" 
               @if(\Request::get('sort') === \App\Constants\Common::SORT_ORDER['receiving'])
                   selected
@@ -90,6 +87,9 @@
               ナンバー
             </th>
             <th class="px-4 py-2 w-1/12 font-semibold text-base text-gray-700 bg-gray-100 border border-gray-700">
+              修理内容
+            </th>
+            <th class="px-4 py-2 w-1/12 font-semibold text-base text-gray-700 bg-gray-100 border border-gray-700">
               担当
             </th>
             <th class="px-4 py-2 w-1/12 font-semibold text-base text-gray-700 bg-gray-100 border border-gray-700">
@@ -118,6 +118,9 @@
               </td>
               <td name="row-{{ $load->id }}" class="px-4 py-2 w-1/12 font-semibold text-base text-gray-700 bg-gray-100 border border-gray-700 text-center">
                   {{ $load->number }}
+              </td>
+              <td name="row-{{ $load->id }}" class="px-4 py-2 w-1/12 font-semibold text-base text-gray-700 bg-gray-100 border border-gray-700 text-center">
+                  {{ $load->content }}
               </td>
               <td name="row-{{ $load->id }}" class="px-4 py-2 w-1/12 font-semibold text-base text-gray-700 bg-gray-100 border border-gray-700 text-center">
                   {{ $load->charge }}

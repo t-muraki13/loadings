@@ -18,6 +18,7 @@ return new class extends Migration
             $table->datetime('receiving');
             $table->string('name');
             $table->text('number');
+            $table->text('content');
             $table->string('charge');
             $table->datetime('issue');
             $table->text('remarks');

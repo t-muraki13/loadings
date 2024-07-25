@@ -14,6 +14,7 @@ class Loading extends Model
         'receiving',
         'name',
         'number',
+        'content',
         'charge',
         'issue',
         'remarks',

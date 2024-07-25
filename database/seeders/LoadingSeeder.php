@@ -21,31 +21,34 @@ class LoadingSeeder extends Seeder
                 'receiving' => '2024/07/23',
                 'name' => '青木宣親',
                 'number' => '品川300 か21-21',
+                'content' => '待ち作業',
                 'charge' => '山崎',
                 'issue' => '2024/07/27',
                 'remarks' => '代車 世田谷300 か26-69',
                 'place' => '世田谷',
-                'created_at' => '2024/01/13 11:11:11'
+                'created_at' => '2024/07/31 11:11:11'
             ],
             [
                 'receiving' => '2024/07/25',
                 'name' => '山田哲人',
                 'number' => '品川300 か24-32',
+                'content' => '12ヶ月点検',
                 'charge' => '宇野',
                 'issue' => '2024/07/29',
                 'remarks' => '代車 世田谷300 か8-13',
                 'place' => '世田谷',
-                'created_at' => '2024/01/15 11:11:11'
+                'created_at' => '2024/08/01 11:11:11'
             ],
             [
-                'receiving' => '2024/01/13',
+                'receiving' => '2024/07/24',
                 'name' => '木村拓哉',
                 'number' => '品川300 か00-32',
+                'content' => '24ヶ月点検',
                 'charge' => '山崎',
                 'issue' => '2024/07/30',
                 'remarks' => '代車 世田谷300 か08-14',
                 'place' => '品川',
-                'created_at' => '2024/01/13 11:11:11'
+                'created_at' => '2024/07/30 11:11:11'
             ],
         ]);
     }

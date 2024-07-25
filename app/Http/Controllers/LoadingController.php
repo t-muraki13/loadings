@@ -29,7 +29,7 @@ class LoadingController extends Controller
             }
         }
 
-        $query = Loading::select('id', 'receiving', 'name', 'number', 'charge', 'issue', 'remarks', 'place')
+        $query = Loading::select('id', 'receiving', 'name', 'number', 'content', 'charge', 'issue', 'remarks', 'place')
             ->when($parseDate, function ($query, $parseDate) {
             $query->whereDate('receiving', $parseDate)
                   ->orWhereDate('issue', $parseDate)
@@ -57,6 +57,7 @@ class LoadingController extends Controller
             'receiving' => ['required', 'date'],
             'name' => ['required', 'string', 'max:255'],
             'number' => ['required', 'string', 'max:255'],
+            'content' => ['required', 'string', 'max:255'],
             'charge' => ['required', 'string', 'max:255'],
             'issue' => ['required', 'date', 'after:receiving'],
             'remarks' => ['required', 'string', 'max:255'],
@@ -69,6 +70,7 @@ class LoadingController extends Controller
                     'receiving' => $request->receiving,
                     'name' => $request->name,
                     'number' => $request->number,
+                    'content' => $request->content,
                     'charge' => $request->charge,
                     'issue' => $request->issue,
                     'remarks' => $request->remarks,
@@ -100,6 +102,7 @@ class LoadingController extends Controller
             'receiving' => ['required', 'date'],
             'name' => ['required', 'string', 'max:255'],
             'number' => ['required', 'string', 'max:255'],
+            'content' => ['required', 'string', 'max:255'],
             'charge' => ['required', 'string', 'max:255'],
             'issue' => ['required', 'date', 'after:receiving'],
             'remarks' => ['required', 'string', 'max:255'],
@@ -110,6 +113,7 @@ class LoadingController extends Controller
         $receiving = $request->receiving;
         $name = $request->name;
         $number = $request->number;
+        $content = $request->content;
         $charge = $request->charge;
         $issue = $request->issue;
         $remarks = $request->remarks;
@@ -120,7 +124,7 @@ class LoadingController extends Controller
         session()->flash('message', '情報を更新しますか？');
         session()->flash('status', 'confirm');
 
-        return view('confirm', compact('loading', 'receiving', 'name', 'number', 'charge', 'issue', 'remarks', 'place', 'id'));
+        return view('confirm', compact('loading', 'receiving', 'name', 'number', 'content', 'charge', 'issue', 'remarks', 'place', 'id'));
 
     }
 
@@ -130,6 +134,7 @@ class LoadingController extends Controller
         $loading->receiving = $request->receiving;
         $loading->name = $request->name;
         $loading->number = $request->number;
+        $loading->content = $request->content;
         $loading->charge = $request->charge;
         $loading->issue = $request->issue;
         $loading->remarks = $request->remarks;
