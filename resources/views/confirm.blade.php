@@ -8,6 +8,7 @@
         <input type="hidden" name="receiving" value="{{ $receiving }}">
         <input type="hidden" name="name" value="{{ $name }}">
         <input type="hidden" name="number" value="{{ $number }}">
+        <input type="hidden" name="content" value="{{ $content }}">
         <input type="hidden" name="charge" value="{{ $charge }}">
         <input type="hidden" name="issue" value="{{ $issue }}">
         <input type="hidden" name="remarks" value="{{ $remarks }}">
@@ -24,6 +25,9 @@
               </th>
               <th class="px-4 py-2 w-1/12 font-semibold text-base text-gray-700 bg-gray-100 border border-gray-700">
                 ナンバー
+              </th>
+              <th class="px-4 py-2 w-1/12 font-semibold text-base text-gray-700 bg-gray-100 border border-gray-700">
+                修理内容
               </th>
               <th class="px-4 py-2 w-1/12 font-semibold text-base text-gray-700 bg-gray-100 border border-gray-700">
                 担当
@@ -49,6 +53,9 @@
                 </td>
                 <td class="px-4 py-2 w-1/12 font-semibold text-base text-gray-700 bg-gray-100 border border-gray-700 text-center">
                     {{ $number }}
+                </td>
+                <td class="px-4 py-2 w-1/12 font-semibold text-base text-gray-700 bg-gray-100 border border-gray-700 text-center">
+                    {{ $content }}
                 </td>
                 <td class="px-4 py-2 w-1/12 font-semibold text-base text-gray-700 bg-gray-100 border border-gray-700 text-center">
                     {{ $charge }}
