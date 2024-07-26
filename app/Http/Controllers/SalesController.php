@@ -1,0 +1,135 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use App\Models\Sales;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
+use Throwable;
+use Carbon\Carbon;
+use Exception;
+
+class SalesController extends Controller
+{
+    public function index(Request $request)
+    {
+        $pagination = $request->pagination ?? 5;
+        $date = $request->input('date');
+        $parseDate = null;
+        //dd('www');
+
+        if ($date) {
+            try {
+                $parseDate = Carbon::parse($date)->format('Y-m-d');
+            } catch (Exception $e) {
+                $parseDate = null;
+            }
+        }
+        //dd($date);
+
+        $query = Sales::select('id', 'receiving', 'name', 'number', 'content', 'charge')
+            ->when($parseDate, function($query, $parseDate) {
+                $query->whereDate('receiving', $parseDate)
+                      ->orderByRaw("CASE WHEN DATE(receiving) = ? THEN 1 ELSE 2 END", [$parseDate])
+                      ->orderBy('receiving', 'asc');
+            })
+            ->sortOrder($request->sort);
+
+        // ページネーション
+        $sales = $query->paginate($pagination);
+
+        //dd($sales);
+        return view('sales.index', compact('sales'));
+    }
+
+    public function create()
+    {
+        return view('sales.create');
+    }
+
+    public function store(Request $request)
+    {
+        //dd($request);
+        $request->validate([
+            'receiving' => ['required', 'date'],
+            'name' => ['required', 'string', 'max:255'],
+            'number' => ['string', 'max:255'],
+            'content' => ['required', 'string', 'max:255'],
+            'charge' => ['required', 'string', 'max:255'],
+        ]);
+
+        try {
+            DB::transaction(function() use($request) {
+                Sales::create([
+                    'receiving' => $request->receiving,
+                    'name' => $request->name,
+                    'number' => $request->number,
+                    'content' => $request->content,
+                    'charge' => $request->charge,
+                ]);
+            });
+        } catch(Throwable $e) {
+            Log::error($e);
+            throw $e;
+        }
+
+        return redirect()
+        ->route('sales.index')
+        ->with(['message' => '情報を登録しました。',
+        'status' => 'info']);
+    }
+    
+    public function edit($id)
+    {
+        //dd($id);
+        $sales = Sales::findOrFail($id);
+
+        return view('sales.edit', compact('sales'));
+    }
+
+    public function confirm(Request $request, $id)
+    {
+        //dd($request, $id);
+        $request->validate([
+            'receiving' => ['required', 'date'],
+            'name' => ['required', 'string', 'max:255'],
+            'number' => ['string', 'max:255'],
+            'content' => ['required', 'string', 'max:255'],
+            'charge' => ['required', 'string', 'max:255'],
+        ]);
+
+        $sales = Sales::findOrFail($id);
+        $receiving = $request->receiving;
+        $name = $request->name;
+        $number = $request->number;
+        $content = $request->content;
+        $charge = $request->charge;
+                
+        // フラッシュメッセージをセッションに保存
+        session()->flash('message', '情報を更新しますか？');
+        session()->flash('status', 'confirm');
+
+        return view('sales.confirm', compact('sales', 'receiving', 'name', 'number', 'content', 'charge', 'id'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        //dd($request, $id);
+        $sales = Sales::findOrFail($id);
+        $sales->receiving = $request->receiving;
+        $sales->name = $request->name;
+        $sales->number = $request->number;
+        $sales->content = $request->content;
+        $sales->charge = $request->charge;
+        $sales->save();
+
+        return redirect()
+        ->route('sales.index')
+        ->with(['message' => 'データを更新しました。',
+        'status' => 'info']);
+    }
+
+
+}
