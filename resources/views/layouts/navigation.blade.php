@@ -17,6 +17,12 @@
                     <x-nav-link :href="route('index')" :active="request()->routeIs('index')">
                         {{ __('loading') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('sales.index')" :active="request()->routeIs('sales.index')">
+                        {{ __('sales') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('index')" :active="request()->routeIs('index')">
+                        {{ __('memo') }}
+                    </x-nav-link>
                 </div>
             </div>
 
@@ -70,7 +76,7 @@
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
             <x-responsive-nav-link :href="route('index')" :active="request()->routeIs('index')">
-                {{ __('Dashboard') }}
+                {{ __('loading') }}
             </x-responsive-nav-link>
         </div>
 
