@@ -84,6 +84,9 @@
               名前
             </th>
             <th class="px-4 py-2 w-1/12 font-semibold text-base text-gray-700 bg-gray-100 border border-gray-700">
+              名前(カナ)
+            </th>
+            <th class="px-4 py-2 w-1/12 font-semibold text-base text-gray-700 bg-gray-100 border border-gray-700">
               ナンバー
             </th>
             <th class="px-4 py-2 w-1/12 font-semibold text-base text-gray-700 bg-gray-100 border border-gray-700">
@@ -105,7 +108,7 @@
         </thead>
         <tbody>
           @foreach ($loading as $load)
-          <tr class="transition-colors duration-300" id="row-{{ $load->id }}">
+          <tr class="transition-colors duration-300">
               <td name="row-{{ $load->id }}" class="px-4 py-2 w-1/12 font-semibold text-base text-gray-700 bg-gray-100 border border-gray-700 text-center">
                   <button type="button" onclick="location.href='{{ route('edit', ['id' => $load->id])}}'" class="inline-flex ml-4 mb-2 text-white bg-gray-500 border-0 py-2 px-8 focus:outline-none hover:bg-gray-600 rounded text-lg">編集</button>
                   <button id="toggle-button-{{ $load->id }}" type="button" class="inline-flex ml-4 text-white bg-red-500 border-0 py-2 px-8 focus:outline-none hover:bg-red-600 rounded text-lg" onclick="toggleComplete('{{ $load->id }}')">完了</button>
@@ -115,6 +118,9 @@
               </td>
               <td name="row-{{ $load->id }}" class="px-4 py-2 w-1/12 font-semibold text-base text-gray-700 bg-gray-100 border border-gray-700 text-center">
                   {{ $load->name }}              
+              </td>
+              <td name="row-{{ $load->id }}" class="px-4 py-2 w-1/12 font-semibold text-base text-gray-700 bg-gray-100 border border-gray-700 text-center">
+                  {{ $load->nameKana }}              
               </td>
               <td name="row-{{ $load->id }}" class="px-4 py-2 w-1/12 font-semibold text-base text-gray-700 bg-gray-100 border border-gray-700 text-center">
                   {{ $load->number }}

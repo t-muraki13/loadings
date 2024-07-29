@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->datetime('receiving');
             $table->string('name');
+            $table->string('nameKana');
             $table->text('number');
             $table->text('content');
             $table->string('charge');

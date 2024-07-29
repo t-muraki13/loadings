@@ -1,6 +1,9 @@
+//loading画面のボタンの色と背景色変更
+
 function toggleComplete(id) {
   const rows = document.getElementsByName('row-' + id);
   const button = document.getElementById('toggle-button-' + id);
+  console.log(rows, button); 
 
   for (let i = 0; i < rows.length; i++) {
       if (button.innerText === '完了') {

@@ -21,8 +21,9 @@ class DatabaseSeeder extends Seeder
         //     'email' => 'test@example.com',
         // ]);
         $this->call([
-            // LoadingSeeder::class,
+            LoadingSeeder::class,
             SalesSeeder::class,
+            MemoSeeder::class,
         ]);
 
     }

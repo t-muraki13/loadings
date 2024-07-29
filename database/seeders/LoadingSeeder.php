@@ -20,6 +20,7 @@ class LoadingSeeder extends Seeder
             [
                 'receiving' => '2024/07/23',
                 'name' => '青木宣親',
+                'nameKana' => 'アオキノリチカ',
                 'number' => '品川300 か21-21',
                 'content' => '待ち作業',
                 'charge' => '山崎',
@@ -31,6 +32,7 @@ class LoadingSeeder extends Seeder
             [
                 'receiving' => '2024/07/25',
                 'name' => '山田哲人',
+                'nameKana' => 'ヤマダテツト',
                 'number' => '品川300 か24-32',
                 'content' => '12ヶ月点検',
                 'charge' => '宇野',
@@ -42,6 +44,7 @@ class LoadingSeeder extends Seeder
             [
                 'receiving' => '2024/07/24',
                 'name' => '木村拓哉',
+                'nameKana' => 'キムラタクヤ',
                 'number' => '品川300 か00-32',
                 'content' => '24ヶ月点検',
                 'charge' => '山崎',

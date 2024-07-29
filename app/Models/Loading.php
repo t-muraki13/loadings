@@ -13,6 +13,7 @@ class Loading extends Model
     protected $fillable = [
         'receiving',
         'name',
+        'nameKana',
         'number',
         'content',
         'charge',

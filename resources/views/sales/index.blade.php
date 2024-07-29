@@ -69,6 +69,9 @@
               名前
             </th>
             <th class="px-4 py-2 w-1/12 font-semibold text-base text-gray-700 bg-gray-100 border border-gray-700">
+              名前(カナ)
+            </th>
+            <th class="px-4 py-2 w-1/12 font-semibold text-base text-gray-700 bg-gray-100 border border-gray-700">
               ナンバー(車種)
             </th>
             <th class="px-4 py-2 w-1/12 font-semibold text-base text-gray-700 bg-gray-100 border border-gray-700">
@@ -84,21 +87,29 @@
           <tr class="transition-colors duration-300" id="row-{{ $sale->id }}">
               <td name="row-{{ $sale->id }}" class="px-4 py-2 w-1/12 font-semibold text-base text-gray-700 bg-gray-100 border border-gray-700 text-center">
                   <button type="button" onclick="location.href='{{ route('sales.edit', ['id' => $sale->id]) }}'" class="inline-flex ml-4 mb-2 text-white bg-gray-500 border-0 py-2 px-8 focus:outline-none hover:bg-gray-600 rounded text-lg">編集</button>
-                  <button id="toggle-button-{{ $sale->id }}" type="button" class="inline-flex ml-4 text-white bg-red-500 border-0 py-2 px-8 focus:outline-none hover:bg-red-600 rounded text-lg">完了</button>
+                  <form id="delete_{{ $sale->id }}" action="{{ route('sales.destroy', ['id' => $sale->id]) }}" method="post">
+                    @csrf
+                    @method('delete')
+                    <a data-id="{{ $sale->id }}" onclick="deletePost(this)" href="#" class="inline-flex ml-4 text-white bg-red-500 border-0 py-2 px-8 focus:outline-none hover:bg-red-600 rounded text-lg">完了</a>
+                  </form>
+                  
               </td>
-              <td name="row-{{ $sale->id }}" class="px-4 py-2 w-1/12 font-semibold text-base text-gray-700 bg-gray-100 border border-gray-700 text-center">
+              <td class="px-4 py-2 w-1/12 font-semibold text-base text-gray-700 bg-gray-100 border border-gray-700 text-center">
                   {{ $sale->receiving }}
               </td>
-              <td name="row-{{ $sale->id }}" class="px-4 py-2 w-1/12 font-semibold text-base text-gray-700 bg-gray-100 border border-gray-700 text-center">
+              <td class="px-4 py-2 w-1/12 font-semibold text-base text-gray-700 bg-gray-100 border border-gray-700 text-center">
                   {{ $sale->name }}              
               </td>
-              <td name="row-{{ $sale->id }}" class="px-4 py-2 w-1/12 font-semibold text-base text-gray-700 bg-gray-100 border border-gray-700 text-center">
+              <td class="px-4 py-2 w-1/12 font-semibold text-base text-gray-700 bg-gray-100 border border-gray-700 text-center">
+                  {{ $sale->nameKana }}              
+              </td>
+              <td class="px-4 py-2 w-1/12 font-semibold text-base text-gray-700 bg-gray-100 border border-gray-700 text-center">
                   {{ $sale->number }}
               </td>
-              <td name="row-{{ $sale->id }}" class="px-4 py-2 w-1/12 font-semibold text-base text-gray-700 bg-gray-100 border border-gray-700 text-center">
+              <td class="px-4 py-2 w-1/12 font-semibold text-base text-gray-700 bg-gray-100 border border-gray-700 text-center">
                   {{ $sale->content }}
               </td>
-              <td name="row-{{ $sale->id }}" class="px-4 py-2 w-1/12 font-semibold text-base text-gray-700 bg-gray-100 border border-gray-700 text-center">
+              <td class="px-4 py-2 w-1/12 font-semibold text-base text-gray-700 bg-gray-100 border border-gray-700 text-center">
                   {{ $sale->charge }}
               </td>
           </tr>
@@ -114,5 +125,12 @@
       </div>
     </div>
   </div>
-  <script src="{{ asset('js/index.js') }}"></script>
+  <script>
+    function deletePost(e) {
+      'use strict';
+      if(confirm('完了にしてもよろしいですか？')) {
+        document.getElementById('delete_' + e.dataset.id).submit();
+      }
+    }
+  </script>
 </x-app-layout>

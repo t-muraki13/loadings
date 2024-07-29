@@ -7,6 +7,7 @@
         @method('PUT')
         <input type="hidden" name="receiving" value="{{ $receiving }}">
         <input type="hidden" name="name" value="{{ $name }}">
+        <input type="hidden" name="nameKana" value="{{ $nameKana }}">
         <input type="hidden" name="number" value="{{ $number }}">
         <input type="hidden" name="content" value="{{ $content }}">
         <input type="hidden" name="charge" value="{{ $charge }}">
@@ -22,6 +23,9 @@
               </th>
               <th class="px-4 py-2 w-1/12 font-semibold text-base text-gray-700 bg-gray-100 border border-gray-700">
                 名前
+              </th>
+              <th class="px-4 py-2 w-1/12 font-semibold text-base text-gray-700 bg-gray-100 border border-gray-700">
+                名前(カナ)
               </th>
               <th class="px-4 py-2 w-1/12 font-semibold text-base text-gray-700 bg-gray-100 border border-gray-700">
                 ナンバー
@@ -50,6 +54,9 @@
                 </td>
                 <td class="px-4 py-2 w-1/12 font-semibold text-base text-gray-700 bg-gray-100 border border-gray-700 text-center">
                     {{ $name }}              
+                </td>
+                <td class="px-4 py-2 w-1/12 font-semibold text-base text-gray-700 bg-gray-100 border border-gray-700 text-center">
+                    {{ $nameKana }}              
                 </td>
                 <td class="px-4 py-2 w-1/12 font-semibold text-base text-gray-700 bg-gray-100 border border-gray-700 text-center">
                     {{ $number }}
