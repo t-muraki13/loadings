@@ -29,7 +29,7 @@ class LoadingController extends Controller
             }
         }
 
-        $query = Loading::select('id', 'receiving', 'name', 'number', 'content', 'charge', 'issue', 'remarks', 'place')
+        $query = Loading::select('id', 'receiving', 'name', 'nameKana', 'number', 'content', 'charge', 'issue', 'remarks', 'place')
             ->when($parseDate, function ($query, $parseDate) {
             $query->whereDate('receiving', $parseDate)
                   ->orWhereDate('issue', $parseDate)
@@ -56,6 +56,7 @@ class LoadingController extends Controller
         $request->validate([
             'receiving' => ['required', 'date'],
             'name' => ['required', 'string', 'max:255'],
+            'nameKana' => ['required', 'string', 'max:255', 'regex:/^[ァ-ヶー]+$/u'],
             'number' => ['required', 'string', 'max:255'],
             'content' => ['required', 'string', 'max:255'],
             'charge' => ['required', 'string', 'max:255'],
@@ -69,6 +70,7 @@ class LoadingController extends Controller
                 Loading::create([
                     'receiving' => $request->receiving,
                     'name' => $request->name,
+                    'nameKana' => $request->nameKana,
                     'number' => $request->number,
                     'content' => $request->content,
                     'charge' => $request->charge,
@@ -101,6 +103,7 @@ class LoadingController extends Controller
         $request->validate([
             'receiving' => ['required', 'date'],
             'name' => ['required', 'string', 'max:255'],
+            'nameKana' => ['required', 'string', 'max:255', 'regex:/^[ァ-ヶー]+$/u'],
             'number' => ['required', 'string', 'max:255'],
             'content' => ['required', 'string', 'max:255'],
             'charge' => ['required', 'string', 'max:255'],
@@ -112,6 +115,7 @@ class LoadingController extends Controller
         $loading = Loading::findOrFail($id);
         $receiving = $request->receiving;
         $name = $request->name;
+        $nameKana = $request->nameKana;
         $number = $request->number;
         $content = $request->content;
         $charge = $request->charge;
@@ -124,15 +128,17 @@ class LoadingController extends Controller
         session()->flash('message', '情報を更新しますか？');
         session()->flash('status', 'confirm');
 
-        return view('confirm', compact('loading', 'receiving', 'name', 'number', 'content', 'charge', 'issue', 'remarks', 'place', 'id'));
+        return view('confirm', compact('loading', 'receiving', 'name', 'nameKana', 'number', 'content', 'charge', 'issue', 'remarks', 'place', 'id'));
 
     }
 
     public function update(Request $request, $id)
     {
+        //dd($request, $id);
         $loading = Loading::findOrFail($id);
         $loading->receiving = $request->receiving;
         $loading->name = $request->name;
+        $loading->nameKana = $request->nameKana;
         $loading->number = $request->number;
         $loading->content = $request->content;
         $loading->charge = $request->charge;

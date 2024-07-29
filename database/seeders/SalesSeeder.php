@@ -20,6 +20,7 @@ class SalesSeeder extends Seeder
             [
                 'receiving' => '2024/07/23',
                 'name' => '木村多江',
+                'nameKana' => 'キムラタエ',
                 'number' => '品川300 か21-45',
                 'content' => '試乗予約',
                 'charge' => '奥田',
@@ -28,6 +29,7 @@ class SalesSeeder extends Seeder
             [
                 'receiving' => '2024/07/25',
                 'name' => '寺脇康文',
+                'nameKana' => 'テラワキヤスフミ',
                 'number' => '品川300 か24-32',
                 'content' => '商談',
                 'charge' => '牧野',
@@ -36,6 +38,7 @@ class SalesSeeder extends Seeder
             [
                 'receiving' => '2024/07/24',
                 'name' => '工藤静香',
+                'nameKana' => 'クドウシズカ',
                 'number' => '品川300 か00-32',
                 'content' => '試乗予約',
                 'charge' => '渡邊',

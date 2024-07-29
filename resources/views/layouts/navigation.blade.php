@@ -20,8 +20,14 @@
                     <x-nav-link :href="route('sales.index')" :active="request()->routeIs('sales.index')">
                         {{ __('sales') }}
                     </x-nav-link>
-                    <x-nav-link :href="route('index')" :active="request()->routeIs('index')">
+                    <x-nav-link :href="route('expired-route.index')" :active="request()->routeIs('expired-route.index')">
+                        {{ __('completion(sales)') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('memo.index')" :active="request()->routeIs('memo.index')">
                         {{ __('memo') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('expired-memo.index')" :active="request()->routeIs('expired-memo.index')">
+                        {{ __('completion(memo)') }}
                     </x-nav-link>
                 </div>
             </div>

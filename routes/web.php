@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\LoadingController;
+use App\Http\Controllers\MemoController;
 use App\Http\Controllers\SalesController;
 use App\Models\Sales;
 use Illuminate\Support\Facades\Route;
@@ -46,6 +47,30 @@ Route::middleware('auth')->group(function () {
     Route::get('/sales/edit/{id}', [SalesController::class,'edit'])->name('sales.edit');
     Route::post('/sales/confirm/{id}', [SalesController::class,'confirm'])->name('sales.confirm');
     Route::put('/sales/update/{id}', [SalesController::class,'update'])->name('sales.update');
+    Route::delete('/sales/{id}', [SalesController::class,'destroy'])->name('sales.destroy');
+
+    Route::get('/memo/index', [MemoController::class, 'index'])->name('memo.index');
+    Route::get('/memo/create', [MemoController::class, 'create'])->name('memo.create');
+    Route::post('/memo/sote', [MemoController::class, 'store'])->name('memo.store');
+    Route::get('/memo/edit/{id}', [MemoController::class, 'edit'])->name('memo.edit');
+    Route::post('/memo/confirm/{id}', [MemoController::class, 'confirm'])->name('memo.confirm');
+    Route::put('/memo/update/{id}', [MemoController::class, 'update'])->name('memo.update');
+    Route::delete('/memo/{id}', [MemoController::class, 'destroy'])->name('memo.destroy');
+
+});
+
+Route::prefix('expired-route')
+->middleware('auth')->group(function() {
+    Route::get('index', [SalesController::class, 'expiredRouteIndex'])->name('expired-route.index');
+    Route::post('destroy/{id}', [SalesController::class, 'expiredRouteDestroy'])->name('expired-route.destroy');
+    Route::post('restore/{id}', [SalesController::class, 'expiredRouteRestore'])->name('expired-route.restore');
+});
+
+Route::prefix('expired-memo')
+->middleware('auth')->group(function() {
+    Route::get('index', [MemoController::class, 'expiredMemoIndex'])->name('expired-memo.index');
+    Route::post('destroy/{id}', [MemoController::class, 'expiredMemoDestroy'])->name('expired-memo.destroy');
+    Route::post('restore/{id}', [MemoController::class, 'expiredMemoRestore'])->name('expired-memo.restore');
 });
 
 require __DIR__.'/auth.php';
