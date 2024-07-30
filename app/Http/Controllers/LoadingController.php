@@ -153,4 +153,13 @@ class LoadingController extends Controller
         'status' => 'info']);
     }
 
+    public function toggleComplete($id)
+    {
+        $loading = Loading::findOrFail($id);
+        $loading->is_completed = !$loading->is_completed; // 状態を反転
+        $loading->save();
+
+        return response()->json(['is_completed' => $loading->is_completed]);
+    }
+
 }

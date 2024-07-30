@@ -36,6 +36,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/edit/{id}', [LoadingController::class,'edit'])->name('edit');
     Route::post('/confirm/{id}', [LoadingController::class,'confirm'])->name('confirm');
     Route::put('/update/{id}', [LoadingController::class,'update'])->name('update');
+    Route::post('/toggle-completed/{id}', [LoadingController::class,'toggleComplete'])->name('toggleComplete');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
