@@ -27,11 +27,11 @@ function toggleComplete(id) {
 }
 
 const select = document.getElementById('sort');
-select.addEventListener('change', function() {
-this.form.submit();
+  select.addEventListener('change', function() {
+  this.form.submit();
 });
 
 const pagination = document.getElementById('pagination');
-pagination.addEventListener('change', function() {
-this.form.submit();
+  pagination.addEventListener('change', function() {
+  this.form.submit();
 });
