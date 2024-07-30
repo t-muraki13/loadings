@@ -1,14 +1,22 @@
 function toggleComplete(id) {
-    const rows = document.getElementsByName('row-' + id);
+    const rows = document.querySelectorAll(`.row-${id}`);
     const button = document.getElementById('toggle-button-' + id);
-
+    console.log(rows, button); 
+  
     let isCompleted = localStorage.getItem('completed-' + id) === 'true';
   
     for (let i = 0; i < rows.length; i++) {
+        // if (!isCompleted) {
+        //     rows[i].classList.add('bg-gray-400'); // グレーに変更
+        // } else {
+        //     rows[i].classList.remove('bg-gray-400'); // 背景色をリセット
+        // }
         if (!isCompleted) {
-            rows[i].classList.add('bg-gray-400'); // グレーに変更
+            // グレーに変更 (important付き)
+            rows[i].style.setProperty('background-color', '#9CA3AF', 'important');
         } else {
-            rows[i].classList.remove('bg-gray-400'); // 背景色をリセット
+            // 背景色をリセット
+            rows[i].style.setProperty('background-color', '', 'important');
         }
     }
   
@@ -32,7 +40,7 @@ function toggleComplete(id) {
     buttons.forEach(button => {
       const id = button.id.replace('toggle-button-', '');
       const isCompleted = localStorage.getItem('completed-' + id) === 'true';
-      const rows = document.getElementsByName('row-' + id);
+      const rows = document.querySelectorAll(`.row-${id}`);
   
       if (isCompleted) {
         button.innerText = '戻す';
@@ -40,7 +48,8 @@ function toggleComplete(id) {
         button.classList.add('bg-gray-500');
   
         for (let i = 0; i < rows.length; i++) {
-            rows[i].classList.add('bg-gray-400');
+            //rows[i].classList.add('bg-gray-400');
+            rows[i].style.setProperty('background-color', '#9CA3AF', 'important');
         }
       }
     });
