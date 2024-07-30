@@ -11,6 +11,7 @@ class Loading extends Model
     use HasFactory;
 
     protected $fillable = [
+        'is_completed',
         'receiving',
         'name',
         'nameKana',
