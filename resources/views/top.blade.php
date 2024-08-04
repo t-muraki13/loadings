@@ -72,7 +72,7 @@
   
   
   <div class="mt-4 flex justify-center">
-    <div class="w-6/7">
+    <div class="w-11/12">
       <table class="min-w-full bg-white mb-4">
         <thead>
           <tr>
@@ -108,36 +108,41 @@
         </thead>
         <tbody>
           @foreach ($loading as $load)
+            @php
+                $isPending = strpos($load->content, '待ち') !== false;
+                $isPlace = strpos($load->place, '品川') !== false;
+                $isDelivery = strpos($load->remarks, 'WS') !== false || strpos($load->remarks, 'SC') !== false;
+            @endphp
           <tr class="transition-colors duration-300">
-              <td class="row-{{ $load->id }} px-4 py-2 w-1/12 font-semibold text-base text-gray-700 bg-gray-100 border border-gray-700 text-center">
+              <td class="row-{{ $load->id }} px-4 py-2 w-1/12 font-semibold text-base text-gray-700 bg-gray-100 border border-gray-700 text-center {{ $isPending ? 'bg-red-100' : 'bg-gray-100' }}  {{ $isPlace ? 'bg-green-100' : 'bg-gray-100' }} {{ $isDelivery ? 'bg-blue-100' : 'bg-gray-100' }}">
                   <button type="button" onclick="location.href='{{ route('edit', ['id' => $load->id])}}'" class="inline-flex ml-4 mb-2 text-white bg-gray-500 border-0 py-2 px-8 focus:outline-none hover:bg-gray-600 rounded text-lg">編集</button>
                   <button id="toggle-button-{{ $load->id }}" type="button" class="inline-flex ml-4 text-white bg-red-500 border-0 py-2 px-8 focus:outline-none hover:bg-red-600 rounded text-lg" onclick="toggleComplete('{{ $load->id }}')">完了</button>
               </td>
-              <td class="row-{{ $load->id }} px-4 py-2 w-1/12 font-semibold text-base text-gray-700 bg-gray-100 border border-gray-700 text-center">
+              <td class="row-{{ $load->id }} px-4 py-2 w-1/12 font-semibold text-base text-gray-700 bg-gray-100 border border-gray-700 text-center {{ $isPending ? 'bg-red-100' : 'bg-gray-100' }} {{ $isPlace ? 'bg-green-100' : 'bg-gray-100' }} {{ $isDelivery ? 'bg-blue-100' : 'bg-gray-100' }}">
                   {{ $load->receiving }}
               </td>
-              <td class="row-{{ $load->id }} px-4 py-2 w-1/12 font-semibold text-base text-gray-700 bg-gray-100 border border-gray-700 text-center">
+              <td class="row-{{ $load->id }} px-4 py-2 w-1/12 font-semibold text-base text-gray-700 bg-gray-100 border border-gray-700 text-center {{ $isPending ? 'bg-red-100' : 'bg-gray-100' }} {{ $isPlace ? 'bg-green-100' : 'bg-gray-100' }} {{ $isDelivery ? 'bg-blue-100' : 'bg-gray-100' }}">
                   {{ $load->name }}              
               </td>
-              <td class="row-{{ $load->id }} px-4 py-2 w-1/12 font-semibold text-base text-gray-700 bg-gray-100 border border-gray-700 text-center">
+              <td class="row-{{ $load->id }} px-4 py-2 w-1/12 font-semibold text-base text-gray-700 bg-gray-100 border border-gray-700 text-center {{ $isPending ? 'bg-red-100' : 'bg-gray-100' }} {{ $isPlace ? 'bg-green-100' : 'bg-gray-100' }} {{ $isDelivery ? 'bg-blue-100' : 'bg-gray-100' }}">
                   {{ $load->nameKana }}              
               </td>
-              <td class="row-{{ $load->id }} px-4 py-2 w-1/12 font-semibold text-base text-gray-700 bg-gray-100 border border-gray-700 text-center">
+              <td class="row-{{ $load->id }} px-4 py-2 w-1/12 font-semibold text-base text-gray-700 bg-gray-100 border border-gray-700 text-center {{ $isPending ? 'bg-red-100' : 'bg-gray-100' }} {{ $isPlace ? 'bg-green-100' : 'bg-gray-100' }} {{ $isDelivery ? 'bg-blue-100' : 'bg-gray-100' }}">
                   {{ $load->number }}
               </td>
-              <td class="row-{{ $load->id }} px-4 py-2 w-1/12 font-semibold text-base text-gray-700 bg-gray-100 border border-gray-700 text-center">
+              <td class="row-{{ $load->id }} px-4 py-2 w-1/12 font-semibold text-base text-gray-700 bg-gray-100 border border-gray-700 text-center {{ $isPending ? 'bg-red-100' : 'bg-gray-100' }} {{ $isPlace ? 'bg-green-100' : 'bg-gray-100' }} {{ $isDelivery ? 'bg-blue-100' : 'bg-gray-100' }}">
                   {{ $load->content }}
               </td>
-              <td class="row-{{ $load->id }} px-4 py-2 w-1/12 font-semibold text-base text-gray-700 bg-gray-100 border border-gray-700 text-center">
+              <td class="row-{{ $load->id }} px-4 py-2 w-1/12 font-semibold text-base text-gray-700 bg-gray-100 border border-gray-700 text-center {{ $isPending ? 'bg-red-100' : 'bg-gray-100' }} {{ $isPlace ? 'bg-green-100' : 'bg-gray-100' }} {{ $isDelivery ? 'bg-blue-100' : 'bg-gray-100' }}">
                   {{ $load->charge }}
               </td>
-              <td class="row-{{ $load->id }} px-4 py-2 w-1/12 font-semibold text-base text-gray-700 bg-gray-100 border border-gray-700 text-center">
+              <td class="row-{{ $load->id }} px-4 py-2 w-1/12 font-semibold text-base text-gray-700 bg-gray-100 border border-gray-700 text-center {{ $isPending ? 'bg-red-100' : 'bg-gray-100' }} {{ $isPlace ? 'bg-green-100' : 'bg-gray-100' }} {{ $isDelivery ? 'bg-blue-100' : 'bg-gray-100' }}">
                   {{ $load->issue }}
               </td>
-              <td class="row-{{ $load->id }} px-4 py-2 w-1/12 font-semibold text-base text-gray-700 bg-gray-100 border border-gray-700 text-center">
+              <td class="row-{{ $load->id }} px-4 py-2 w-1/12 font-semibold text-base text-gray-700 bg-gray-100 border border-gray-700 text-center {{ $isPending ? 'bg-red-100' : 'bg-gray-100' }} {{ $isPlace ? 'bg-green-100' : 'bg-gray-100' }} {{ $isDelivery ? 'bg-blue-100' : 'bg-gray-100' }}">
                   {{ $load->remarks }}
               </td>
-              <td class="row-{{ $load->id }} px-4 py-2 w-1/12 font-semibold text-base text-gray-700 bg-gray-100 border border-gray-700 text-center">
+              <td class="row-{{ $load->id }} px-4 py-2 w-1/12 font-semibold text-base text-gray-700 bg-gray-100 border border-gray-700 text-center {{ $isPending ? 'bg-red-100' : 'bg-gray-100' }} {{ $isPlace ? 'bg-green-100' : 'bg-gray-100' }} {{ $isDelivery ? 'bg-blue-100' : 'bg-gray-100' }}">
                   {{ $load->place }}
               </td>
           </tr>

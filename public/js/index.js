@@ -12,7 +12,7 @@ function toggleComplete(id) {
         //     rows[i].classList.remove('bg-gray-400'); // 背景色をリセット
         // }
         if (!isCompleted) {
-            // グレーに変更 (important付き)
+            // 背景色をグレーに変更 
             rows[i].style.setProperty('background-color', '#9CA3AF', 'important');
         } else {
             // 背景色をリセット

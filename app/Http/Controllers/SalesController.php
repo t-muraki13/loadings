@@ -18,7 +18,7 @@ class SalesController extends Controller
         $pagination = $request->pagination ?? 5;
         $date = $request->input('date');
         $parseDate = null;
-        //dd('www');
+        //dd($request->pagination);
 
         if ($date) {
             try {
