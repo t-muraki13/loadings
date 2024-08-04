@@ -16,6 +16,7 @@ class LoadingController extends Controller
     {
         $pagination = $request->pagination ?? 5;
         // 日付パラメータの取得と検証
+        // dd($request);
         $date = $request->input('date');
         $parseDate = null;
     
@@ -38,6 +39,8 @@ class LoadingController extends Controller
                   ->orderBy('issue', 'asc');
         })
         ->sortOrder($request->sort);
+
+        
     
         // ページネーション
         $loading = $query->paginate($pagination);

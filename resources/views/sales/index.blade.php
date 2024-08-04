@@ -57,7 +57,7 @@
     </div>
   </form>
   <div class="mt-4 flex justify-center">
-    <div class="w-6/7">
+    <div class="w-10/12">
       <table class="min-w-full bg-white mb-4">
         <thead>
           <tr>
@@ -125,4 +125,5 @@
     </div>
   </div>
   <script src="{{ asset('js/delete.js') }}"></script>
+  <script src="{{ asset('js/pagination.js') }}"></script>
 </x-app-layout>
