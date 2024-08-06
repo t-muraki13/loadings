@@ -9,15 +9,19 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Throwable;
 use Carbon\Carbon;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 
 class LoadingController extends Controller
 {
     public function index(Request $request)
     {
         $pagination = $request->pagination ?? 5;
-        // 日付パラメータの取得と検証
-        // dd($request);
+        // 日付検索パラメータ
         $date = $request->input('date');
+        //検索クエリパラメーター
+        $query = $request->input('query');
+        //dd($name);
         $parseDate = null;
     
         // 日付が存在する場合、Carbonでパース
@@ -30,22 +34,47 @@ class LoadingController extends Controller
             }
         }
 
-        $query = Loading::select('id', 'receiving', 'name', 'nameKana', 'number', 'content', 'charge', 'issue', 'remarks', 'place')
+        // 入庫日の時間順に並べる
+        $receivingQuery = Loading::select('id', 'receiving', 'name', 'nameKana', 'number', 'content', 'charge', 'issue', 'remarks', 'place')
             ->when($parseDate, function ($query, $parseDate) {
-            $query->whereDate('receiving', $parseDate)
-                  ->orWhereDate('issue', $parseDate)
-                  ->orderByRaw("CASE WHEN DATE(receiving) = ? THEN 1 ELSE 2 END", [$parseDate])
-                  ->orderBy('receiving', 'asc')
-                  ->orderBy('issue', 'asc');
-        })
-        ->sortOrder($request->sort);
-
+                $query->whereDate('receiving', $parseDate)
+                      ->orderBy('receiving', 'asc');
+            })
+            ->when($query, function ($query, $queryValue) {
+                $query->where('name', 'like', "%{$queryValue}%")
+                      ->orwhere('nameKana', 'like', "%{$queryValue}%")
+                      ->orwhere('number', 'like', "%{$queryValue}%");
+            });
         
-    
-        // ページネーション
-        $loading = $query->paginate($pagination);
-    
-        return view('top', compact('loading'));
+        // 出庫日の時間順に並べる
+        $issueQuery = Loading::select('id', 'receiving', 'name', 'nameKana', 'number', 'content', 'charge', 'issue', 'remarks', 'place')
+            ->when($parseDate, function ($query, $parseDate) {
+                $query->whereDate('issue', $parseDate)
+                      ->orderBy('issue', 'asc');
+            })
+            ->when($query, function ($query, $queryValue) {
+                $query->where('name', 'like', "%{$queryValue}%")
+                      ->orwhere('nameKana', 'like', "%{$queryValue}%")
+                      ->orwhere('number', 'like', "%{$queryValue}%");
+            });
+        
+        // クエリ結果をマージ
+        $receivingLoadings = $receivingQuery->get();
+        $issueLoadings = $issueQuery->get();
+        
+        // コレクションをマージし、手動でページネーションを適用
+        $mergedLoadings = $receivingLoadings->merge($issueLoadings);
+        
+        // ページネーションの手動実装
+        $currentPage = LengthAwarePaginator::resolveCurrentPage();
+        $perPage = $pagination;
+        $currentResults = $mergedLoadings->slice(($currentPage - 1) * $perPage, $perPage)->values();
+        $paginatedLoadings = new LengthAwarePaginator($currentResults, $mergedLoadings->count(), $perPage, $currentPage, [
+         'path' => LengthAwarePaginator::resolveCurrentPath(),
+         'query' => $request->query(),
+        ]);
+        
+        return view('top', ['loading' => $paginatedLoadings]);
     }
 
     public function create()
@@ -64,7 +93,7 @@ class LoadingController extends Controller
             'content' => ['required', 'string', 'max:255'],
             'charge' => ['required', 'string', 'max:255'],
             'issue' => ['required', 'date', 'after:receiving'],
-            'remarks' => ['required', 'string', 'max:255'],
+            'remarks' => ['nullable', 'string', 'max:255'],
             'place' =>['required', 'string', 'max:255'],
         ]);
 
@@ -78,7 +107,7 @@ class LoadingController extends Controller
                     'content' => $request->content,
                     'charge' => $request->charge,
                     'issue' => $request->issue,
-                    'remarks' => $request->remarks,
+                    'remarks' => $request->remarks ?? '',
                     'place' => $request->place,
                 ]);
             });
@@ -111,7 +140,7 @@ class LoadingController extends Controller
             'content' => ['required', 'string', 'max:255'],
             'charge' => ['required', 'string', 'max:255'],
             'issue' => ['required', 'date', 'after:receiving'],
-            'remarks' => ['required', 'string', 'max:255'],
+            'remarks' => ['nullable', 'string', 'max:255'],
             'place' =>['required', 'string', 'max:255'],
         ]);
 
@@ -123,7 +152,7 @@ class LoadingController extends Controller
         $content = $request->content;
         $charge = $request->charge;
         $issue = $request->issue;
-        $remarks = $request->remarks;
+        $remarks = $request->remarks ?? '';
         $place = $request->place;
 
         //dd($loading, $receiving, $name, $number, $charge, $issue, $remarks, $place);
@@ -146,7 +175,7 @@ class LoadingController extends Controller
         $loading->content = $request->content;
         $loading->charge = $request->charge;
         $loading->issue = $request->issue;
-        $loading->remarks = $request->remarks;
+        $loading->remarks = $request->remarks ?? '';
         $loading->place = $request->place;
         $loading->save();
 

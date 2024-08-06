@@ -4,14 +4,38 @@
   <form action="{{ route('index') }}" method="get">
     <div class="lg:flex lg:justify-end items-center max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
       <div>
-        <span class="text-sm">日付絞りこみ</span>
+        <span class="text-sm">日付検索</span>
         <div class="lg:flex items-center space-x-2">
           <input type="date" name="date" id="date" value="{{ request('date') }}">
-          <div class="flex space-x-4 items-center">
-            <div class="items-center">
-              <button type="submit" class="text-white bg-blue-500 border-0 py-2 px-8 focus:outline-none hover:bg-blue-600 rounded text-lg">検索</button>
-            </div>
-          </div>
+        </div>
+      </div>
+      <!-- <div class="ml-2">
+        <span class="text-sm">名前検索</span>
+        <div class="lg:flex items-center space-x-2">
+          <input type="text" name="name" id="name" value="{{ request('name') }}">
+        </div>
+      </div>
+      <div class="ml-2">
+        <span class="text-sm">名前(カナ)検索</span>
+        <div class="lg:flex items-center space-x-2">
+          <input type="text" name="nameKana" id="nameKana" value="{{ request('nameKana') }}">
+        </div>
+      </div>
+      <div class="ml-2">
+        <span class="text-sm">ナンバー検索</span>
+        <div class="lg:flex items-center space-x-2">
+          <input type="text" name="number" id="number" value="{{ request('number') }}">
+        </div>
+      </div> -->
+      <div class="ml-2">
+        <span class="text-sm">検索</span>
+        <div class="lg:flex items-center space-x-2">
+          <input type="text" name="query" id="query" value="{{ request('query') }}" placeholder="名前、名前(カナ)、ナンバー検索" class="w-80">
+        </div>
+      </div>
+      <div class="flex space-x-4 items-center mt-6 ml-2">
+        <div class="items-center">
+          <button type="submit" class="text-white bg-blue-500 border-0 py-2 px-8 focus:outline-none hover:bg-blue-600 rounded text-lg">検索</button>
         </div>
       </div>
       <div class="lg:flex ml-8">
@@ -159,4 +183,5 @@
     </div>
   </div>
   <script src="{{ asset('js/index.js') }}"></script>
+  <script src="{{ asset('js/pagination.js') }}"></script>
 </x-app-layout>
