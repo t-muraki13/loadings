@@ -11,7 +11,7 @@
     </div>
   </div>
   <div class="mt-4 flex justify-center">
-    <div class="w-6/7">
+    <div class="w-3/4">
       <table class="min-w-full bg-white mb-4">
         <thead>
           <tr>
