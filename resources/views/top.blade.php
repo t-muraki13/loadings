@@ -1,4 +1,5 @@
 <x-app-layout>
+@include('layouts.navigation', ['badgeCount' => $badgeCount  ?? 0, 'salesBadgeCount' => $salesBadgeCount ?? 0, 'memoBadgeCount' => $memoBadgeCount ?? 0])
 <x-flash-message status="session('status')" />
 
   <form action="{{ route('index') }}" method="get">
@@ -9,24 +10,6 @@
           <input type="date" name="date" id="date" value="{{ request('date') }}">
         </div>
       </div>
-      <!-- <div class="ml-2">
-        <span class="text-sm">名前検索</span>
-        <div class="lg:flex items-center space-x-2">
-          <input type="text" name="name" id="name" value="{{ request('name') }}">
-        </div>
-      </div>
-      <div class="ml-2">
-        <span class="text-sm">名前(カナ)検索</span>
-        <div class="lg:flex items-center space-x-2">
-          <input type="text" name="nameKana" id="nameKana" value="{{ request('nameKana') }}">
-        </div>
-      </div>
-      <div class="ml-2">
-        <span class="text-sm">ナンバー検索</span>
-        <div class="lg:flex items-center space-x-2">
-          <input type="text" name="number" id="number" value="{{ request('number') }}">
-        </div>
-      </div> -->
       <div class="ml-2">
         <span class="text-sm">検索</span>
         <div class="lg:flex items-center space-x-2">
@@ -88,6 +71,9 @@
             <option value="20" @if(\Request::get('pagination') === '20') selected @endif>
               20件
             </option>
+            <option value="30" @if(\Request::get('pagination') === '30') selected @endif>
+              30件
+            </option>
           </select>
         </div>
       </div>
@@ -136,37 +122,52 @@
                 $isPending = strpos($load->content, '待ち') !== false;
                 $isPlace = strpos($load->place, '品川') !== false;
                 $isDelivery = strpos($load->remarks, 'WS') !== false || strpos($load->remarks, 'SC') !== false;
+                $isBadge = $load->is_new == 1;
+
+                $class = 'row-6 px-4 py-2 w-1/12 font-semibold text-base text-gray-700 border border-gray-700 text-center'; // デフォルトの背景色
+                if ($isPending) {
+                    $class .= ' bg-red-100';
+                }
+                if ($isPlace) {
+                    $class .= ' bg-green-100';
+                }
+                if ($isDelivery) {
+                    $class .= ' bg-blue-100';
+                }
+                if ($isBadge) {
+                  $class .= ' bg-yellow-200';
+                }
             @endphp
           <tr class="transition-colors duration-300">
-              <td class="row-{{ $load->id }} px-4 py-2 w-1/12 font-semibold text-base text-gray-700 bg-gray-100 border border-gray-700 text-center {{ $isPending ? 'bg-red-100' : 'bg-gray-100' }}  {{ $isPlace ? 'bg-green-100' : 'bg-gray-100' }} {{ $isDelivery ? 'bg-blue-100' : 'bg-gray-100' }}">
+              <td class="row-{{ $load->id }} {{ $class }}">
                   <button type="button" onclick="location.href='{{ route('edit', ['id' => $load->id])}}'" class="inline-flex ml-4 mb-2 text-white bg-gray-500 border-0 py-2 px-8 focus:outline-none hover:bg-gray-600 rounded text-lg">編集</button>
                   <button id="toggle-button-{{ $load->id }}" type="button" class="inline-flex ml-4 text-white bg-red-500 border-0 py-2 px-8 focus:outline-none hover:bg-red-600 rounded text-lg" onclick="toggleComplete('{{ $load->id }}')">完了</button>
               </td>
-              <td class="row-{{ $load->id }} px-4 py-2 w-1/12 font-semibold text-base text-gray-700 bg-gray-100 border border-gray-700 text-center {{ $isPending ? 'bg-red-100' : 'bg-gray-100' }} {{ $isPlace ? 'bg-green-100' : 'bg-gray-100' }} {{ $isDelivery ? 'bg-blue-100' : 'bg-gray-100' }}">
+              <td class="row-{{ $load->id }} {{ $class }}">
                   {{ $load->receiving }}
               </td>
-              <td class="row-{{ $load->id }} px-4 py-2 w-1/12 font-semibold text-base text-gray-700 bg-gray-100 border border-gray-700 text-center {{ $isPending ? 'bg-red-100' : 'bg-gray-100' }} {{ $isPlace ? 'bg-green-100' : 'bg-gray-100' }} {{ $isDelivery ? 'bg-blue-100' : 'bg-gray-100' }}">
+              <td class="row-{{ $load->id }} {{ $class }}">
                   {{ $load->name }}              
               </td>
-              <td class="row-{{ $load->id }} px-4 py-2 w-1/12 font-semibold text-base text-gray-700 bg-gray-100 border border-gray-700 text-center {{ $isPending ? 'bg-red-100' : 'bg-gray-100' }} {{ $isPlace ? 'bg-green-100' : 'bg-gray-100' }} {{ $isDelivery ? 'bg-blue-100' : 'bg-gray-100' }}">
+              <td class="row-{{ $load->id }} {{ $class }}">
                   {{ $load->nameKana }}              
               </td>
-              <td class="row-{{ $load->id }} px-4 py-2 w-1/12 font-semibold text-base text-gray-700 bg-gray-100 border border-gray-700 text-center {{ $isPending ? 'bg-red-100' : 'bg-gray-100' }} {{ $isPlace ? 'bg-green-100' : 'bg-gray-100' }} {{ $isDelivery ? 'bg-blue-100' : 'bg-gray-100' }}">
+              <td class="row-{{ $load->id }} {{ $class }}">
                   {{ $load->number }}
               </td>
-              <td class="row-{{ $load->id }} px-4 py-2 w-1/12 font-semibold text-base text-gray-700 bg-gray-100 border border-gray-700 text-center {{ $isPending ? 'bg-red-100' : 'bg-gray-100' }} {{ $isPlace ? 'bg-green-100' : 'bg-gray-100' }} {{ $isDelivery ? 'bg-blue-100' : 'bg-gray-100' }}">
+              <td class="row-{{ $load->id }} {{ $class }}">
                   {{ $load->content }}
               </td>
-              <td class="row-{{ $load->id }} px-4 py-2 w-1/12 font-semibold text-base text-gray-700 bg-gray-100 border border-gray-700 text-center {{ $isPending ? 'bg-red-100' : 'bg-gray-100' }} {{ $isPlace ? 'bg-green-100' : 'bg-gray-100' }} {{ $isDelivery ? 'bg-blue-100' : 'bg-gray-100' }}">
+              <td class="row-{{ $load->id }} {{ $class }}">
                   {{ $load->charge }}
               </td>
-              <td class="row-{{ $load->id }} px-4 py-2 w-1/12 font-semibold text-base text-gray-700 bg-gray-100 border border-gray-700 text-center {{ $isPending ? 'bg-red-100' : 'bg-gray-100' }} {{ $isPlace ? 'bg-green-100' : 'bg-gray-100' }} {{ $isDelivery ? 'bg-blue-100' : 'bg-gray-100' }}">
+              <td class="row-{{ $load->id }} {{ $class }}">
                   {{ $load->issue }}
               </td>
-              <td class="row-{{ $load->id }} px-4 py-2 w-1/12 font-semibold text-base text-gray-700 bg-gray-100 border border-gray-700 text-center {{ $isPending ? 'bg-red-100' : 'bg-gray-100' }} {{ $isPlace ? 'bg-green-100' : 'bg-gray-100' }} {{ $isDelivery ? 'bg-blue-100' : 'bg-gray-100' }}">
+              <td class="row-{{ $load->id }} {{ $class }}">
                   {{ $load->remarks }}
               </td>
-              <td class="row-{{ $load->id }} px-4 py-2 w-1/12 font-semibold text-base text-gray-700 bg-gray-100 border border-gray-700 text-center {{ $isPending ? 'bg-red-100' : 'bg-gray-100' }} {{ $isPlace ? 'bg-green-100' : 'bg-gray-100' }} {{ $isDelivery ? 'bg-blue-100' : 'bg-gray-100' }}">
+              <td class="row-{{ $load->id }} {{ $class }}">
                   {{ $load->place }}
               </td>
           </tr>
@@ -177,11 +178,22 @@
         'sort' => \Request::get('sort'),
         'pagination' => \Request::get('pagination')
       ])->links() }}
+
       <div class="flex justify-end mt-4 mb-4">
-        <button type="button" onclick="location.href='{{ route('create') }}'" class="inline-flex text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg">登録</button>
+        <div class="flex justify-end mt-4 mb-4">
+          <button type="button" onclick="previewPDF()" data-url="{{ route('generate.pdf') }}" class="inline-flex text-white bg-yellow-500 border-0 py-2 px-8 focus:outline-none hover:bg-yellow-600 rounded text-lg">PDF</button>
+        </div>
+        <div class="flex justify-end mt-4 mb-4 ml-4">
+          <button type="button" onclick="location.href='{{ route('create') }}'" class="inline-flex text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg">登録</button>
+        </div>
       </div>
     </div>
   </div>
   <script src="{{ asset('js/index.js') }}"></script>
   <script src="{{ asset('js/pagination.js') }}"></script>
+  <script src="{{ asset('js/pdf.js') }}"></script>
+  <script>
+    let markBadgeSeenUrl = "{{ route('mark-badge-seen') }}";
+  </script>
+  <script src="{{ asset('js/badge.js') }}"></script>
 </x-app-layout>

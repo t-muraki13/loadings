@@ -21,6 +21,7 @@ class Loading extends Model
         'issue',
         'remarks',
         'place',
+        'is_new',
     ];
 
     public function scopeSortOrder($query, $sortOrder)

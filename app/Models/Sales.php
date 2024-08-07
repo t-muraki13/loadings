@@ -18,6 +18,7 @@ class Sales extends Model
         'number',
         'content',
         'charge',
+        'is_new',
     ];
 
     public function scopeSortOrder($query, $sortOrder)

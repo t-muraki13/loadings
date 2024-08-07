@@ -16,7 +16,7 @@ class LoadingController extends Controller
 {
     public function index(Request $request)
     {
-        $pagination = $request->pagination ?? 5;
+        $pagination = $request->pagination ?? 20;
         // 日付検索パラメータ
         $date = $request->input('date');
         //検索クエリパラメーター
@@ -35,7 +35,7 @@ class LoadingController extends Controller
         }
 
         // 入庫日の時間順に並べる
-        $receivingQuery = Loading::select('id', 'receiving', 'name', 'nameKana', 'number', 'content', 'charge', 'issue', 'remarks', 'place')
+        $receivingQuery = Loading::select('id', 'receiving', 'name', 'nameKana', 'number', 'content', 'charge', 'issue', 'remarks', 'place', 'is_new')
             ->when($parseDate, function ($query, $parseDate) {
                 $query->whereDate('receiving', $parseDate)
                       ->orderBy('receiving', 'asc');
@@ -47,7 +47,7 @@ class LoadingController extends Controller
             });
         
         // 出庫日の時間順に並べる
-        $issueQuery = Loading::select('id', 'receiving', 'name', 'nameKana', 'number', 'content', 'charge', 'issue', 'remarks', 'place')
+        $issueQuery = Loading::select('id', 'receiving', 'name', 'nameKana', 'number', 'content', 'charge', 'issue', 'remarks', 'place', 'is_new')
             ->when($parseDate, function ($query, $parseDate) {
                 $query->whereDate('issue', $parseDate)
                       ->orderBy('issue', 'asc');
@@ -73,8 +73,14 @@ class LoadingController extends Controller
          'path' => LengthAwarePaginator::resolveCurrentPath(),
          'query' => $request->query(),
         ]);
+
+        // is_newがtrueのレコード数をカウント
+        $badgeCount = Loading::where('is_new', true)->count();
         
-        return view('top', ['loading' => $paginatedLoadings]);
+        return view('top', [
+            'loading' => $paginatedLoadings,
+            'badgeCount' => $badgeCount,
+    ]);
     }
 
     public function create()
@@ -109,6 +115,7 @@ class LoadingController extends Controller
                     'issue' => $request->issue,
                     'remarks' => $request->remarks ?? '',
                     'place' => $request->place,
+                    'is_new' => true,
                 ]);
             });
         } catch(Throwable $e) {
@@ -177,6 +184,7 @@ class LoadingController extends Controller
         $loading->issue = $request->issue;
         $loading->remarks = $request->remarks ?? '';
         $loading->place = $request->place;
+        $loading->is_new = true;
         $loading->save();
 
         return redirect()
@@ -192,6 +200,14 @@ class LoadingController extends Controller
         $loading->save();
 
         return response()->json(['is_completed' => $loading->is_completed]);
+    }
+
+    public function markBadgeSeen(Request $request)
+    {
+        // 現在のユーザーに関連するバッジを「確認済み」にする
+        Loading::where('is_new', true)->update(['is_new' => false]);
+    
+        return response()->json(['status' => 'success']);
     }
 
 }

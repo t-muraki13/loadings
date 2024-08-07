@@ -42,6 +42,9 @@
           @endforeach
         </tbody>
       </table>
+      <div class="flex justify-end mt-4 mb-4">
+        <button onclick="location.href='{{ route('memo.index') }}'" class="inline-flex ml-4 text-white bg-green-500 border-0 py-2 px-8 focus:outline-none hover:bg-green-600 rounded text-lg">memo</button>
+      </div>
     </div>
   </div>
   <script src="{{ asset('js/delete.js') }}"></script>

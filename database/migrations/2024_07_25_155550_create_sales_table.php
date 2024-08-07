@@ -21,6 +21,7 @@ return new class extends Migration
             $table->text('number');
             $table->text('content');
             $table->string('charge');
+            $table->boolean('is_new')->default(true);
             $table->timestamps();
             $table->softDeletes();
         });

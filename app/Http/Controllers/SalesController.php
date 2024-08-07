@@ -15,7 +15,7 @@ class SalesController extends Controller
 {
     public function index(Request $request)
     {
-        $pagination = $request->pagination ?? 5;
+        $pagination = $request->pagination ?? 20;
         $date = $request->input('date');
         $parseDate = null;
         //dd($request->pagination);
@@ -29,7 +29,7 @@ class SalesController extends Controller
         }
         //dd($date);
 
-        $query = Sales::select('id', 'receiving', 'name', 'nameKana', 'number', 'content', 'charge')
+        $query = Sales::select('id', 'receiving', 'name', 'nameKana', 'number', 'content', 'charge', 'is_new')
             ->when($parseDate, function($query, $parseDate) {
                 $query->whereDate('receiving', $parseDate)
                       ->orderByRaw("CASE WHEN DATE(receiving) = ? THEN 1 ELSE 2 END", [$parseDate])
@@ -39,9 +39,10 @@ class SalesController extends Controller
 
         // ページネーション
         $sales = $query->paginate($pagination);
+        $salesBadgeCount = Sales::where('is_new', true)->count();
 
         //dd($sales);
-        return view('sales.index', compact('sales'));
+        return view('sales.index', compact('sales', 'salesBadgeCount'));
     }
 
     public function create()
@@ -70,6 +71,7 @@ class SalesController extends Controller
                     'number' => $request->number,
                     'content' => $request->content,
                     'charge' => $request->charge,
+                    'is_new' => true,
                 ]);
             });
         } catch(Throwable $e) {
@@ -128,6 +130,7 @@ class SalesController extends Controller
         $sales->number = $request->number;
         $sales->content = $request->content;
         $sales->charge = $request->charge;
+        $sales->is_new = true;
         $sales->save();
 
         return redirect()
@@ -173,5 +176,11 @@ class SalesController extends Controller
         'status' => 'alert']);
     }
 
-
+    public function markBadgeSeen(Request $request)
+    {
+        // 現在のユーザーに関連するバッジを「確認済み」にする
+        Sales::where('is_new', true)->update(['is_new' => false]);
+    
+        return response()->json(['status' => 'success']);
+    }
 }

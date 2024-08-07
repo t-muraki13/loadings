@@ -1,4 +1,5 @@
 <x-app-layout>
+@include('layouts.navigation', ['badgeCount' => $badgeCount ?? 0, 'salesBadgeCount' => $salesBadgeCount ?? 0, 'memoBadgeCount' => $memoBadgeCount ?? 0])
 <x-flash-message status="session('status')" />
   <form action="{{ route('sales.index') }}" method="get">
     <div class="lg:flex lg:justify-end items-center max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
@@ -84,8 +85,16 @@
         </thead>
         <tbody>
           @foreach ($sales as $sale)
+            @php
+                $isBadge = $sale->is_new == 1;
+
+                $class = 'px-4 py-2 w-1/12 font-semibold text-base text-gray-700 bg-gray-100 border border-gray-700 text-center'; // デフォルトの背景色
+                if ($isBadge) {
+                  $class .= ' bg-yellow-200';
+                }
+            @endphp
           <tr class="transition-colors duration-300" id="row-{{ $sale->id }}">
-              <td name="row-{{ $sale->id }}" class="px-4 py-2 w-1/12 font-semibold text-base text-gray-700 bg-gray-100 border border-gray-700 text-center">
+              <td name="row-{{ $sale->id }}" class="{{ $class }}">
                   <button type="button" onclick="location.href='{{ route('sales.edit', ['id' => $sale->id]) }}'" class="inline-flex ml-4 mb-2 text-white bg-gray-500 border-0 py-2 px-8 focus:outline-none hover:bg-gray-600 rounded text-lg">編集</button>
                   <form id="delete_{{ $sale->id }}" action="{{ route('sales.destroy', ['id' => $sale->id]) }}" method="post">
                     @csrf
@@ -93,22 +102,22 @@
                     <a data-id="{{ $sale->id }}" onclick="deletePost(this)" href="#" class="inline-flex ml-4 text-white bg-red-500 border-0 py-2 px-8 focus:outline-none hover:bg-red-600 rounded text-lg">完了</a>
                   </form>
               </td>
-              <td class="px-4 py-2 w-1/12 font-semibold text-base text-gray-700 bg-gray-100 border border-gray-700 text-center">
+              <td class="{{ $class }}">
                   {{ $sale->receiving }}
               </td>
-              <td class="px-4 py-2 w-1/12 font-semibold text-base text-gray-700 bg-gray-100 border border-gray-700 text-center">
+              <td class="{{ $class }}">
                   {{ $sale->name }}              
               </td>
-              <td class="px-4 py-2 w-1/12 font-semibold text-base text-gray-700 bg-gray-100 border border-gray-700 text-center">
+              <td class="{{ $class }}">
                   {{ $sale->nameKana }}              
               </td>
-              <td class="px-4 py-2 w-1/12 font-semibold text-base text-gray-700 bg-gray-100 border border-gray-700 text-center">
+              <td class="{{ $class }}">
                   {{ $sale->number }}
               </td>
-              <td class="px-4 py-2 w-1/12 font-semibold text-base text-gray-700 bg-gray-100 border border-gray-700 text-center">
+              <td class="{{ $class }}">
                   {{ $sale->content }}
               </td>
-              <td class="px-4 py-2 w-1/12 font-semibold text-base text-gray-700 bg-gray-100 border border-gray-700 text-center">
+              <td class="{{ $class }}">
                   {{ $sale->charge }}
               </td>
           </tr>
@@ -126,4 +135,8 @@
   </div>
   <script src="{{ asset('js/delete.js') }}"></script>
   <script src="{{ asset('js/pagination.js') }}"></script>
+  <script>
+    let markBadgeSeenUrl = "{{ route('sales.mark-badge-seen') }}";
+  </script>
+  <script src="{{ asset('js/salesbadge.js') }}"></script>
 </x-app-layout>

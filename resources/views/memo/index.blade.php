@@ -1,4 +1,5 @@
 <x-app-layout>
+@include('layouts.navigation', ['badgeCount' => $badgeCount ?? 0, 'salesBadgeCount' => $salesBadgeCount ?? 0, 'memoBadgeCount' => $memoBadgeCount ?? 0])
 <x-flash-message status="session('status')" />
   <div class="container px-5 py-24 mx-auto">
     <div class="xl:w-1/2 lg:w-3/4 w-full mx-auto text-center">
@@ -22,8 +23,24 @@
         </thead>
         <tbody>
           @foreach ($memo as $memos)
+            @php
+                $isBadges = $memos->is_new == 1;
+                
+                $classes = 'px-4 py-2 w-1/5 font-semibold text-base text-gray-700 bg-gray-100 border border-gray-700 text-center'; // デフォルトの背景色
+                if ($isBadges) {
+                  $classes .= ' bg-yellow-200';
+                }
+            @endphp
+            @php
+                $isBadge = $memos->is_new == 1;
+                
+                $class = 'px-4 py-2 w-4/5 font-semibold text-base text-gray-700 bg-gray-100 border border-gray-700 text-left'; // デフォルトの背景色
+                if ($isBadge) {
+                  $class .= ' bg-yellow-200';
+                }
+            @endphp
           <tr class="transition-colors duration-300" id="row-{{ $memos->id }}">
-              <td name="row-{{ $memos->id }}" class="px-4 py-2 w-1/5 font-semibold text-base text-gray-700 bg-gray-100 border border-gray-700 text-center">
+              <td name="row-{{ $memos->id }}" class="{{ $classes }}">
                   <button type="button" onclick="location.href='{{ route('memo.edit', ['id' => $memos->id]) }}'" class="inline-flex ml-4 mb-2 text-white bg-gray-500 border-0 py-2 px-8 focus:outline-none hover:bg-gray-600 rounded text-lg">編集</button>
                   <form id="delete_{{ $memos->id }}" action="{{ route('memo.destroy', ['id' => $memos->id]) }}" method="post">
                     @csrf
@@ -31,7 +48,7 @@
                     <a data-id="{{ $memos->id }}" onclick="deletePost(this)" href="#" class="inline-flex ml-4 text-white bg-red-500 border-0 py-2 px-8 focus:outline-none hover:bg-red-600 rounded text-lg">完了</a>
                   </form>
               </td>
-              <td class="px-4 py-2 w-4/5 font-semibold text-base text-gray-700 bg-gray-100 border border-gray-700 text-left">
+              <td class="{{ $class }}">
                   {{ $memos->content }}
               </td>
           </tr>
@@ -44,4 +61,8 @@
     </div>
   </div>
   <script src="{{ asset('js/delete.js') }}"></script>
+  <script>
+    let markBadgeSeenUrl = "{{ route('memo.mark-badge-seen') }}";
+  </script>
+  <script src="{{ asset('js/memoBadge.js') }}"></script>
 </x-app-layout>

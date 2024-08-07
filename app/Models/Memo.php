@@ -12,6 +12,7 @@ class Memo extends Model
 
     protected $fillable = [
         'content',
+        'is_new',
     ];
 
 }
