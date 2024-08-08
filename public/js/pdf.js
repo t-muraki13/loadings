@@ -1,15 +1,3 @@
-// function previewPDF() {
-//   window.open('{{ route("generate.pdf") }}', '_blank');
-// }
-
-// function previewPDF() {
-//   window.location.href = '{{ route("generate.pdf") }}';
-// }
-
-// function previewPDF(url) {
-//   window.open(url, '_blank');
-// }
-
 function previewPDF() {
   const button = document.querySelector('button[data-url]');
   const routeUrl = button.getAttribute('data-url');
