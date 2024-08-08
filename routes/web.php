@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\LoadingController;
 use App\Http\Controllers\MemoController;
 use App\Http\Controllers\SalesController;
+use App\Http\Controllers\PDFController;
 use App\Models\Sales;
 use Illuminate\Support\Facades\Route;
 
@@ -57,6 +58,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/memo/confirm/{id}', [MemoController::class, 'confirm'])->name('memo.confirm');
     Route::put('/memo/update/{id}', [MemoController::class, 'update'])->name('memo.update');
     Route::delete('/memo/{id}', [MemoController::class, 'destroy'])->name('memo.destroy');
+
+    Route::get('/generate-pdf', [PDFController::class, 'generatePDF'])->name('generate.pdf');
 
 });
 

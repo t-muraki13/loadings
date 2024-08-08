@@ -1,0 +1,98 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use TCPDF;
+use Dompdf\Dompdf;
+use Dompdf\Options;
+use Illuminate\Support\Facades\View;
+use App\Models\Loading;
+
+class PDFController extends Controller
+{
+    public function generatePDF(Request $request)
+    {
+        //　日付を取得
+        $parseDate = $request->query('date');
+        $query = $request->query('query');
+
+        // クエリを組み立ててデータを取得
+        $receivingQuery = Loading::select('id', 'receiving', 'name', 'nameKana', 'number', 'content', 'charge', 'issue', 'remarks', 'place')
+            ->when($parseDate, function ($query, $parseDate) {
+                $query->whereDate('receiving', $parseDate)
+                      ->orderBy('receiving', 'asc');
+            })
+            ->when($query, function ($query, $queryValue) {
+                $query->where('name', 'like', "%{$queryValue}%")
+                      ->orWhere('nameKana', 'like', "%{$queryValue}%")
+                      ->orWhere('number', 'like', "%{$queryValue}%");
+            });
+
+        $issueQuery = Loading::select('id', 'receiving', 'name', 'nameKana', 'number', 'content', 'charge', 'issue', 'remarks', 'place')
+            ->when($parseDate, function ($query, $parseDate) {
+                $query->whereDate('issue', $parseDate)
+                      ->orderBy('issue', 'asc');
+            })
+            ->when($query, function ($query, $queryValue) {
+                $query->where('name', 'like', "%{$queryValue}%")
+                      ->orWhere('nameKana', 'like', "%{$queryValue}%")
+                      ->orWhere('number', 'like', "%{$queryValue}%");
+            });
+        // クエリ結果をマージ
+        $receivingLoadings = $receivingQuery->get();
+        $issueLoadings = $issueQuery->get();
+        $mergedLoadings = $receivingLoadings->merge($issueLoadings);
+        //dd($loading);
+
+        // TCPDF オブジェクトの作成
+        $pdf = new TCPDF();
+        
+        // 日本語フォントを設定（必要に応じて）
+        $pdf->SetFont('ipaexg', '', 12);
+
+        // ページの追加
+        $pdf->AddPage('L', 'A4');
+
+        // HTML コンテンツの作成
+        $html = '';
+        $html .= '<table border="1" cellpadding="4">';
+        $html .= '<thead>
+                   <tr>
+                     <th>日付</th>
+                     <th>名前</th>
+                     <th>名前(カナ)</th>
+                     <th>ナンバー</th>
+                     <th>修理内容</th>
+                     <th>担当</th>
+                     <th>出庫日</th>
+                     <th>備考</th>
+                     <th>入庫場所</th>
+                   </tr>
+                  </thead>
+                  <tbody>';
+
+        foreach ($mergedLoadings as $load) {
+            $html .= '<tr>
+                       <td>' . htmlspecialchars($load->receiving) . '</td>
+                       <td>' . htmlspecialchars($load->name) . '</td>
+                       <td>' . htmlspecialchars($load->nameKana) . '</td>
+                       <td>' . htmlspecialchars($load->number) . '</td>
+                       <td>' . htmlspecialchars($load->content) . '</td>
+                       <td>' . htmlspecialchars($load->charge) . '</td>
+                       <td>' . htmlspecialchars($load->issue) . '</td>
+                       <td>' . htmlspecialchars($load->remarks) . '</td>
+                       <td>' . htmlspecialchars($load->place) . '</td>
+                     </tr>';
+        }
+
+        $html .= '</tbody></table>';
+
+        // HTML を PDF に変換
+        $pdf->writeHTML($html, true, false, true, false, '');
+
+        // PDF を出力
+        return response($pdf->Output('入出庫.pdf', 'I'))
+                ->header('Content-Type', 'application/pdf');
+    }
+}
