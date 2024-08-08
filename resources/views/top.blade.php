@@ -70,6 +70,9 @@
             <option value="20" @if(\Request::get('pagination') === '20') selected @endif>
               20件
             </option>
+            <option value="30" @if(\Request::get('pagination') === '30') selected @endif>
+              30件
+            </option>
           </select>
         </div>
       </div>
@@ -120,15 +123,15 @@
                 $isDelivery = strpos($load->remarks, 'WS') !== false || strpos($load->remarks, 'SC') !== false;
 
                 $class = 'row-6 px-4 py-2 w-1/12 font-semibold text-base text-gray-700 border border-gray-700 text-center'; // デフォルトの背景色
-    if ($isPending) {
-        $class .= ' bg-red-100';
-    }
-    if ($isPlace) {
-        $class .= ' bg-green-100';
-    }
-    if ($isDelivery) {
-        $class .= ' bg-blue-100';
-    }
+                if ($isPending) {
+                    $class .= ' bg-red-100';
+                }
+                if ($isPlace) {
+                    $class .= ' bg-green-100';
+                }
+                if ($isDelivery) {
+                    $class .= ' bg-blue-100';
+                }
             @endphp
           <tr class="transition-colors duration-300">
               <td class="row-{{ $load->id }} {{ $class }}">
@@ -170,11 +173,18 @@
         'sort' => \Request::get('sort'),
         'pagination' => \Request::get('pagination')
       ])->links() }}
+
       <div class="flex justify-end mt-4 mb-4">
-        <button type="button" onclick="location.href='{{ route('create') }}'" class="inline-flex text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg">登録</button>
+        <div class="flex justify-end mt-4 mb-4">
+          <button type="button" onclick="previewPDF()" data-url="{{ route('generate.pdf') }}" class="inline-flex text-white bg-yellow-500 border-0 py-2 px-8 focus:outline-none hover:bg-yellow-600 rounded text-lg">PDF</button>
+        </div>
+        <div class="flex justify-end mt-4 mb-4 ml-4">
+          <button type="button" onclick="location.href='{{ route('create') }}'" class="inline-flex text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg">登録</button>
+        </div>
       </div>
     </div>
   </div>
   <script src="{{ asset('js/index.js') }}"></script>
   <script src="{{ asset('js/pagination.js') }}"></script>
+  <script src="{{ asset('js/pdf.js') }}"></script>
 </x-app-layout>
