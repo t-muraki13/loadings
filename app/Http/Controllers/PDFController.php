@@ -72,18 +72,32 @@ class PDFController extends Controller
                   </thead>
                   <tbody>';
 
+        // 背景色を切り替えるフラグ
+        $rowcolor = false;
         foreach ($mergedLoadings as $load) {
-            $html .= '<tr>
-                       <td>' . htmlspecialchars($load->receiving) . '</td>
-                       <td>' . htmlspecialchars($load->name) . '</td>
-                       <td>' . htmlspecialchars($load->nameKana) . '</td>
-                       <td>' . htmlspecialchars($load->number) . '</td>
-                       <td>' . htmlspecialchars($load->content) . '</td>
-                       <td>' . htmlspecialchars($load->charge) . '</td>
-                       <td>' . htmlspecialchars($load->issue) . '</td>
-                       <td>' . htmlspecialchars($load->remarks) . '</td>
-                       <td>' . htmlspecialchars($load->place) . '</td>
-                     </tr>';
+            //デフォルト背景色
+            $bgcolor = '#ffffff';
+            if (strpos($load->content, '待ち') !== false) {
+              $bgcolor = '#fee2e2';
+            } elseif (strpos($load->place, '品川') !== false) {
+              $bgcolor = '#d1fae5';
+            } elseif (strpos($load->remarks, 'WS') !== false || strpos($load->remarks, 'SC') !== false) {
+              $bgcolor = '#dbeafe';
+            }
+
+            $html .= '<tr style="background-color:' . $bgcolor . ';">' .
+                       '<td>' . htmlspecialchars($load->receiving) . '</td>' .
+                       '<td>' . htmlspecialchars($load->name) . '</td>' .
+                       '<td>' . htmlspecialchars($load->nameKana) . '</td>' .
+                       '<td>' . htmlspecialchars($load->number) . '</td>' .
+                       '<td>' . htmlspecialchars($load->content) . '</td>' .
+                       '<td>' . htmlspecialchars($load->charge) . '</td>' .
+                       '<td>' . htmlspecialchars($load->issue) . '</td>' .
+                       '<td>' . htmlspecialchars($load->remarks) . '</td>' .
+                       '<td>' . htmlspecialchars($load->place) . '</td>' .
+                     '</tr>';
+
+                     $rowcolor = !$rowcolor;
         }
 
         $html .= '</tbody></table>';
