@@ -43,7 +43,6 @@ class PDFController extends Controller
         $receivingLoadings = $receivingQuery->get();
         $issueLoadings = $issueQuery->get();
         $mergedLoadings = $receivingLoadings->merge($issueLoadings);
-        //dd($loading);
 
         // TCPDF オブジェクトの作成
         $pdf = new TCPDF();
@@ -74,7 +73,15 @@ class PDFController extends Controller
 
         // 背景色を切り替えるフラグ
         $rowcolor = false;
+        $previousDate = null;
+        $parseDateFormatt = date('Y-m-d', strtotime($parseDate));
+        $inserted = false;
+
         foreach ($mergedLoadings as $load) {
+
+          $issueDate = date('Y-m-d', strtotime(substr($load->issue, 0, 10)));
+          $currentDate = date('Y-m-d', strtotime(substr($load->receiving, 0, 10)));
+          //dd($currentDate);
             //デフォルト背景色
             $bgcolor = '#ffffff';
             if (strpos($load->content, '待ち') !== false) {
@@ -83,6 +90,12 @@ class PDFController extends Controller
               $bgcolor = '#d1fae5';
             } elseif (strpos($load->remarks, 'WS') !== false || strpos($load->remarks, 'SC') !== false) {
               $bgcolor = '#dbeafe';
+            }
+
+            // 日付で検索した際に入庫日と出庫日の間にラインを入れる
+          if (!$inserted && ($previousDate !== $parseDateFormatt || $issueDate === $parseDateFormatt) && $currentDate !== $parseDateFormatt) {
+                $html .= '<tr><td colspan="9" style="background-color: yellow; padding: 0; line-height: 0;"></td></tr>';
+                $inserted = true;
             }
 
             $html .= '<tr style="background-color:' . $bgcolor . ';">' .
@@ -97,7 +110,8 @@ class PDFController extends Controller
                        '<td>' . htmlspecialchars($load->place) . '</td>' .
                      '</tr>';
 
-                     $rowcolor = !$rowcolor;
+            $rowcolor = !$rowcolor;
+            $previousDate = $currentDate;
         }
 
         $html .= '</tbody></table>';
