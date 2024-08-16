@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('memos', function (Blueprint $table) {
             $table->id();
             $table->text('content');
+            $table->boolean('is_new')->default(true);
             $table->timestamps();
             $table->softDeletes();
         });

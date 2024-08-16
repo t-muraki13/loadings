@@ -25,6 +25,7 @@ return new class extends Migration
             $table->datetime('issue');
             $table->text('remarks')->nullable();
             $table->text('place');
+            $table->boolean('is_new')->default(true);
             $table->timestamps();
         });
     }

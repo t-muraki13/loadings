@@ -13,17 +13,32 @@
                 </div>
 
                 <!-- Navigation Links -->
-                <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">     
                     <x-nav-link :href="route('index')" :active="request()->routeIs('index')">
+                        @if($badgeCount > 0)
+                            <span class="badge ml-2 mr-2 inline-flex items-top justify-center px-2 py-0.5 text-xs font-medium leading-4 text-white bg-red-700 rounded-full">
+                                {{ $badgeCount }}
+                            </span>
+                        @endif
                         {{ __('loading') }}
                     </x-nav-link>
                     <x-nav-link :href="route('sales.index')" :active="request()->routeIs('sales.index')">
+                        @if($salesBadgeCount > 0)
+                            <span class="badge ml-2 mr-2 inline-flex items-top justify-center px-2 py-0.5 text-xs font-medium leading-4 text-white bg-red-700 rounded-full">
+                                {{ $salesBadgeCount }}
+                            </span>
+                        @endif
                         {{ __('sales') }}
                     </x-nav-link>
                     <x-nav-link :href="route('expired-route.index')" :active="request()->routeIs('expired-route.index')">
                         {{ __('completion(sales)') }}
                     </x-nav-link>
                     <x-nav-link :href="route('memo.index')" :active="request()->routeIs('memo.index')">
+                        @if($memoBadgeCount > 0)
+                            <span class="badge ml-2 mr-2 inline-flex items-top justify-center px-2 py-0.5 text-xs font-medium leading-4 text-white bg-red-700 rounded-full">
+                                {{ $memoBadgeCount }}
+                            </span>
+                        @endif
                         {{ __('memo') }}
                     </x-nav-link>
                     <x-nav-link :href="route('expired-memo.index')" :active="request()->routeIs('expired-memo.index')">
