@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\View;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -23,6 +24,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        // View::composer('layouts.navigation', function ($view) {
+        //     $view->with('badgeCount', session('badgeCount', 0))
+        //          ->with('salesBadgeCount', session('salesBadgeCount', 0))
+        //          ->with('memoBadgeCount', session('memoBadgeCount', 0));
+        // });
     }
 }

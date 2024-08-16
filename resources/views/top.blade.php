@@ -1,4 +1,5 @@
 <x-app-layout>
+@include('layouts.navigation', ['badgeCount' => $badgeCount  ?? 0, 'salesBadgeCount' => $salesBadgeCount ?? 0, 'memoBadgeCount' => $memoBadgeCount ?? 0])
 <x-flash-message status="session('status')" />
 
   <form action="{{ route('index') }}" method="get">
@@ -121,6 +122,7 @@
                 $isPending = strpos($load->content, '待ち') !== false;
                 $isPlace = strpos($load->place, '品川') !== false;
                 $isDelivery = strpos($load->remarks, 'WS') !== false || strpos($load->remarks, 'SC') !== false;
+                $isBadge = $load->is_new == 1;
 
                 $class = 'row-6 px-4 py-2 w-1/12 font-semibold text-base text-gray-700 border border-gray-700 text-center'; // デフォルトの背景色
                 if ($isPending) {
@@ -131,6 +133,9 @@
                 }
                 if ($isDelivery) {
                     $class .= ' bg-blue-100';
+                }
+                if ($isBadge) {
+                  $class .= ' bg-yellow-200';
                 }
             @endphp
           <tr class="transition-colors duration-300">
@@ -187,4 +192,8 @@
   <script src="{{ asset('js/index.js') }}"></script>
   <script src="{{ asset('js/pagination.js') }}"></script>
   <script src="{{ asset('js/pdf.js') }}"></script>
+  <script>
+    let markBadgeSeenUrl = "{{ route('mark-badge-seen') }}";
+  </script>
+  <script src="{{ asset('js/badge.js') }}"></script>
 </x-app-layout>

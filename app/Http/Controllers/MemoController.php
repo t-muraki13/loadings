@@ -15,9 +15,10 @@ class MemoController extends Controller
 {
     public function index()
     {
-        $memo = Memo::select('id', 'content')->get();
+        $memo = Memo::select('id', 'content', 'is_new')->get();
+        $memoBadgeCount = Memo::where('is_new', true)->count();
 
-        return view('memo.index', compact('memo'));
+        return view('memo.index', compact('memo', 'memoBadgeCount'));
     }
 
     public function create()
@@ -36,6 +37,7 @@ class MemoController extends Controller
             DB::transaction(function() use($request) {
                 Memo::create([
                     'content' => $request->content,
+                    'is_new' => true,
                 ]);
             });
         } catch(Throwable $e) {
@@ -77,6 +79,7 @@ class MemoController extends Controller
     {
         $memo = Memo::findOrFail($id);
         $memo->content = $request->content;
+        $memo->is_new = true;
         $memo->save();
 
         return redirect()
@@ -117,6 +120,14 @@ class MemoController extends Controller
         ->route('expired-memo.index')
         ->with(['message' => '復元しました。',
         'status' => 'info']);
+    }
+
+    public function markBadgeSeen(Request $request)
+    {
+        // 現在のユーザーに関連するバッジを「確認済み」にする
+        Memo::where('is_new', true)->update(['is_new' => false]);
+    
+        return response()->json(['status' => 'success']);
     }
 
 }
