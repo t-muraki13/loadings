@@ -38,6 +38,7 @@
               <td class="px-4 py-2 w-3/4 font-semibold text-base text-gray-700 bg-gray-100 border border-gray-700 text-center">
                   {{ $memo->content }}
               </td>
+              ちょめ
           </tr>
           @endforeach
         </tbody>
